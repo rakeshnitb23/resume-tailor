@@ -1,0 +1,12 @@
+# Your personal data never goes in the repo
+Resume_Original.md
+Resume_Original.pdf
+Resume_*/
+CoverLetter_*/
+*.pdf
+*.docx
+
+# Build and OS junk
+__pycache__/
+*.pyc
+.DS_Store
