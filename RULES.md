@@ -29,13 +29,14 @@ Temporary Markdown files are build inputs only. Create them outside this workspa
 2. **Do not fill gaps.** If the job asks for something the resume does not show, do not add it. Report it separately using the exact label `Not in your resume: ...`.
 3. You may reword, reorder, emphasize, or remove existing content to match the role. Do not change the meaning of the candidate's experience.
 4. Keep every number exactly as it appears in the original resume. Do not round, recalculate, inflate, or invent metrics.
-5. Use the company's job description to decide what to emphasize, not as evidence that the candidate possesses a skill or experience.
-6. Generate only the document types the user requests. A resume-only request must not produce a cover letter; a cover-letter-only request must not produce a resume. Create an interest answer only if explicitly requested.
-7. Reuse the existing `md2pdf.py` script for PDF generation. Do not write a new conversion script or modify the existing one.
-8. Do not modify the original resume, strategy file, conversion script, or unrelated files.
-9. Report the output paths, meaningful changes, missing qualifications, and PDF verification status. Never claim a file was created or verified if it was not.
-10. **No job-description words the resume doesn't contain.** A term that appears only in the job description must not appear in the tailored resume, not even as one word slipped into an existing bullet (e.g. turning "LangGraph path" into "LangGraph agent path" because the job mentions agents). Before building, check every new word or phrase against `Resume_Original.md`.
-11. **End every deliverable reply with the folder name**, as the last line, e.g. `Folder: Resume_Acme/`.
+5. **Keep every hyperlink intact.** Wherever `Resume_Original.md` has a markdown link (email, LinkedIn, GitHub, project/repo URLs), the tailored resume must carry that same markdown link syntax, not plain text. Never strip a link down to bare text, and never invent a link that is not in the original.
+6. Use the company's job description to decide what to emphasize, not as evidence that the candidate possesses a skill or experience.
+7. Generate only the document types the user requests. A resume-only request must not produce a cover letter; a cover-letter-only request must not produce a resume. Create an interest answer only if explicitly requested.
+8. Reuse the existing `md2pdf.py` script for PDF generation. Do not write a new conversion script or modify the existing one.
+9. Do not modify the original resume, strategy file, conversion script, or unrelated files.
+10. Report the output paths, meaningful changes, missing qualifications, and PDF verification status. Never claim a file was created or verified if it was not.
+11. **No job-description words the resume doesn't contain.** A term that appears only in the job description must not appear in the tailored resume, not even as one word slipped into an existing bullet (e.g. turning "LangGraph path" into "LangGraph agent path" because the job mentions agents). Before building, check every new word or phrase against `Resume_Original.md`.
+12. **End every deliverable reply with the folder name**, as the last line, e.g. `Folder: Resume_Acme/`.
 
 ### What tailoring may and may not change
 
@@ -45,6 +46,7 @@ Temporary Markdown files are build inputs only. Create them outside this workspa
 | Reorder bullets, skills and skill groups to match the job | Job-description terms inserted into bullets or the Summary |
 | Say the same fact in different words, using the resume's own terms | Rewording that changes or inflates the meaning |
 | Merge duplicate bullets, shorten or drop the least relevant ones to fit one page | Changing, rounding or recalculating numbers |
+| Keep every existing hyperlink as a markdown link | Flattening a hyperlink to plain text, or inventing a new one |
 
 ---
 
@@ -89,7 +91,7 @@ The folder should contain only the deliverables the user requested.
    - **Experience:** Reorder and reword existing bullets so the most relevant evidence appears first.
    - **Technical Skills:** Reorder only skills already listed in the original resume.
    - **Education and Additional:** Preserve the original facts; do not invent or infer details.
-6. Preserve the original resume's header and formatting unless the user asks for a change. Keep names, places and contact details spelled exactly as the original has them, even if they look like typos.
+6. Preserve the original resume's header and formatting unless the user asks for a change. Keep names, places and contact details spelled exactly as the original has them, even if they look like typos, and keep every hyperlink as a markdown link.
 7. Convert the temporary Markdown file using the existing script:
 
    ```bash
@@ -107,7 +109,7 @@ The folder should contain only the deliverables the user requested.
 
 Match the structure and visual conventions of `Resume_Original.md`:
 
-- Keep the original header and contact details unchanged.
+- Keep the original header and contact details unchanged, including their markdown hyperlinks (email, LinkedIn, GitHub, project/repo links).
 - Keep sections in this order when those sections exist in the original: `Summary`, `Experience`, `Technical Skills`, `Education`, `Additional`.
 - Each job should use the original role/company heading style, italic dates line, and bullets.
 - Skills should use the original grouped-line style.
@@ -132,7 +134,7 @@ Do not create a resume if the user requested only a cover letter.
    - The top job requirements.
    - Remote or time-zone requirements, if relevant.
 4. Write a cover letter of **250–350 words** in 3–4 short paragraphs, following the strategy file:
-   - **Opening:** Begin with a fresh, human, non-technical observation tied directly to a real company-specific signal. Do not begin with “I am writing to apply” or lead with skills/tools.
+   - **Opening:** Begin with a fresh, human, non-technical observation tied directly to a real company-specific signal. Do not begin with "I am writing to apply" or lead with skills/tools.
    - **Evidence:** Use 1–2 of the strongest relevant resume-backed examples. Preserve their real numbers exactly.
    - **Why this company:** Explain the connection to the company's actual work. Mention remote readiness, time-zone overlap, written communication, or independent delivery only if supported by the resume or explicitly stated by the user.
    - **Close:** Thank the reader and state a clear next step.
@@ -182,9 +184,14 @@ Use the candidate's real name and contact details from the original resume. Do n
 
 Only create this answer when the user explicitly asks for it.
 
+- Read `Human_Style_Cover_Letter_Strategy.md` in full before writing, same as for a cover letter. The interest answer is governed by that file's "Short Interest in the Company Answer" section, not written ad hoc.
 - Save it as `Resume_<Company>/Interest_<Company>.txt`.
-- Write exactly **4 sentences**.
-- Follow this order: (1) the company signal or human observation, (2) why it resonates, (3) what the candidate can contribute based on the original resume, and (4) a brief close.
+- Write exactly **4 sentences**, in this order:
+  1. A specific, human, non-technical observation or company signal — the same kind of quiet, observational hook used to open a cover letter. Do not start with a restated job-description line or a credentials/technical lead-in.
+  2. Why it resonates with the candidate — genuine, not a skills statement.
+  3. What the candidate can contribute, based only on `Resume_Original.md`.
+  4. A brief close.
+- The opening sentence must read like the cover letter's human hook (sentence 1 of Paragraph 1 in Task 2), not like the body/evidence paragraph. Technical contribution belongs in sentence 3, not sentence 1 or 2.
 - Use the same truthful, human tone as the cover letter.
 - Do not create a PDF for the interest answer unless the user explicitly asks for one.
 
@@ -197,6 +204,7 @@ Before reporting completion, confirm:
 - [ ] `Resume_Original.md` was read in full and used as the only source of candidate facts.
 - [ ] The cover-letter strategy was read in full if a cover letter was requested.
 - [ ] No unsupported skills, tools, employers, projects, qualifications, achievements, numbers, dates, or stories were added.
+- [ ] Every hyperlink present in `Resume_Original.md` is still a markdown link in the tailored resume, not plain text.
 - [ ] Missing requirements are listed as `Not in your resume: ...`.
 - [ ] Only the requested document types were generated.
 - [ ] All deliverables for the company are saved in the one canonical `Resume_<Company>/` folder.

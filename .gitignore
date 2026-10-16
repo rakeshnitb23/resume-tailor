@@ -5,6 +5,7 @@ Resume_*/
 CoverLetter_*/
 *.pdf
 *.docx
+New_Rule.md
 
 # Build and OS junk
 __pycache__/

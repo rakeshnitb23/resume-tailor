@@ -45,14 +45,13 @@ body { font-family: "STIX Two Text", "Latin Modern Roman", "Times New Roman", se
 h1, h1 + p { text-align: center; }
 h1 { font-size: 13pt; margin: 0; letter-spacing: 0; }
 h1 + p { font-size: 9.5pt; margin: 0 0 6pt; line-height: 1.25; }
-h1 + p a { color: inherit; }
 h2 { font-size: 11pt; text-transform: uppercase; letter-spacing: .8pt;
      border-bottom: 1px solid #444; padding-bottom: 2pt; margin: 8pt 0 4pt; }
 h3 { font-size: 10.5pt; margin: 5pt 0 1pt; }
 p  { margin: 2pt 0 4pt; }
 ul { margin: 2pt 0 5pt; padding-left: 16pt; }
 li { margin: 1pt 0; }
-a  { color: #0b5cad; text-decoration: none; }
+a  { color: #000080; text-decoration: underline; }
 strong { font-weight: 600; }
 em { color: #555; }
 hr { border: 0; border-top: 1px solid #ccc; margin: 8pt 0; }
