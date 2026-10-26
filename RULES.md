@@ -37,6 +37,7 @@ Temporary Markdown files are build inputs only. Create them outside this workspa
 10. Report the output paths, meaningful changes, missing qualifications, and PDF verification status. Never claim a file was created or verified if it was not.
 11. **No job-description words the resume doesn't contain.** A term that appears only in the job description must not appear in the tailored resume, not even as one word slipped into an existing bullet (e.g. turning "LangGraph path" into "LangGraph agent path" because the job mentions agents). Before building, check every new word or phrase against `Resume_Original.md`.
 12. **End every deliverable reply with the folder name**, as the last line, e.g. `Folder: Resume_Acme/`.
+13. **Open every created file in VS Code.** After creating and verifying a deliverable, open it in the user's current VS Code window with `code -r <path>` (macOS, if `code` is not on PATH: `"/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code" -r <path>`), so it is ready to copy. For a cover letter, open the `.txt`.
 
 ### What tailoring may and may not change
 
@@ -214,4 +215,5 @@ Before reporting completion, confirm:
 - [ ] The resume PDF is exactly one A4 page if a resume was requested.
 - [ ] The cover letter is 250–350 words and its PDF is one page if a cover letter was requested.
 - [ ] The cover-letter TXT and PDF contain matching text.
+- [ ] Every created file was opened in the current VS Code window.
 - [ ] The final report includes file paths, changes made, missing qualifications, and honest PDF verification results.
