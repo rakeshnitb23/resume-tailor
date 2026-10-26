@@ -45,6 +45,7 @@ If you only have a PDF resume, open Claude Code here and say: *"Convert my resum
 - **Gaps are listed, not filled.** Every reply ends with a `Not in your resume: ...` list.
 - **Numbers stay exact.** No rounding or inflating.
 - **One page, one folder per company.** Only the documents you ask for get generated.
+- **Opened for you.** Every file it creates opens in your current VS Code window, ready to copy.
 - **Your data stays local.** `.gitignore` keeps `Resume_Original.md` and every `Resume_*/` output out of git.
 
 Full details are in [`RULES.md`](RULES.md). The cover letter style is in [`Human_Style_Cover_Letter_Strategy.md`](Human_Style_Cover_Letter_Strategy.md).
