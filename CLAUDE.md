@@ -33,7 +33,7 @@ Cover letters and interest answers are not written from the summary in this file
 10. **No job-description words the resume doesn't contain.** A term that appears only in the job description must not appear in the tailored resume, not even one word slipped into an existing bullet (e.g. turning "LangGraph path" into "LangGraph agent path" because the job mentions agents). Before building, check every new word or phrase against `Resume_Original.md`.
 11. **End every deliverable reply with the folder name** as the last line, e.g. `Folder: Resume_Acme/`.
 12. **Non-English job posts:** if the pasted job description is in another language, first translate it to English (show the user a short English version), work from the English version, then generate the deliverables. **Resumes, cover letters and interest answers are always written in English**, unless the user explicitly asks for another language. Missing language requirements (e.g. German fluency) are reported as `Not in your resume: ...` gaps.
-13. **Open every created file in VS Code.** After creating and verifying a deliverable, open it in the user's current VS Code window with `code -r <path>` (macOS, if `code` is not on PATH: `"/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code" -r <path>`), so it is ready to copy. For a cover letter, open the `.txt`.
+13. **Open created files in VS Code only in the WellFound session.** When `wellFound_session.md` applies, open each deliverable in the user's current VS Code window with `code -r <path>` after it is created and verified (macOS, if `code` is not on PATH: `"/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code" -r <path>`). For a cover letter, open the `.txt`. Outside the WellFound session, do not open files. Exception: whenever the user asks for an interest answer, open its `.txt` after generating it, in any session.
 
 ### What tailoring may and may not change
 
@@ -148,5 +148,5 @@ When this task is requested, or when `wellFound_session.md` makes it the default
 - [ ] Only requested documents generated, all in the one `Resume_<Company>/` folder.
 - [ ] `md2pdf.py` reused; no generated resume or cover-letter Markdown left in the workspace. Project Markdown was not deleted.
 - [ ] Resume PDF is exactly one A4 page; cover letter is 250–350 words, one-page PDF, TXT and PDF match.
-- [ ] Every created file was opened in the current VS Code window.
+- [ ] In the WellFound session, every created file was opened in the current VS Code window.
 - [ ] Report includes paths, changes, gaps, honest verification, and ends with `Folder: Resume_<Company>/`.
