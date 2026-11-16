@@ -13,7 +13,7 @@ Follow these rules. If a rule here conflicts with an explicit user request, ask 
 
 | File or folder | Purpose |
 |---|---|
-| `Resume_Original.md` | The original resume and the **only source of candidate facts**. Read it in full before tailoring a resume or writing a cover letter. |
+| `Resume_Original.md` | The original resume and the **source of candidate facts** (tailored resumes may also carry JD skills the user approved; see Ground Rule 1). Never modified by tailoring. Read it in full before tailoring a resume or writing a cover letter. |
 | `Human_Style_Cover_Letter_Strategy.md` | The cover-letter strategy. Read it in full before every cover letter. |
 | `md2pdf.py` | The existing Markdown-to-PDF conversion script (Safari/WebKit on macOS by default, `--engine chrome` elsewhere). Reuse it; do not rewrite it or create another conversion script. |
 | `coverletter.css` | Styling for cover-letter PDFs. Pass it to `md2pdf.py` with `--css coverletter.css`. |
@@ -25,17 +25,17 @@ Temporary Markdown files are build inputs only. Create them outside this workspa
 
 ## Ground Rules
 
-1. **Candidate facts come only from `Resume_Original.md`.** Never add a skill, tool, employer, project, qualification, achievement, number, date, or personal story that is not supported by the original resume.
-2. **Do not fill gaps.** If the job asks for something the resume does not show, do not add it. Report it separately using the exact label `Not in your resume: ...`.
+1. **Candidate facts come from `Resume_Original.md`, plus job-description skills the user approves.** Never add an employer, project, qualification, achievement, number, date, or personal story the original resume does not support. The one exception is skills and keywords from the job description: these may be added to a tailored resume **only through the JD-Gap Approval Loop** (Task 1), and they stay only if the user approves them. An approval covers that one tailored resume. It never changes `Resume_Original.md`.
+2. **Gaps go through the approval loop.** A job requirement the resume does not show is proposed to the user as `Added from JD: ...` or `Reworded to fit JD: ...`. Anything the user rejects, and anything not proposed (degrees, years of experience, languages, certifications, clearances), is reported with the exact label `Not in your resume: ...`. A skill the candidate is learning appears as a `Currently learning: ...` line only when `Resume_Original.md` contains that line or the user approves one.
 3. You may reword, reorder, emphasize, or remove existing content to match the role. Do not change the meaning of the candidate's experience.
 4. Keep every number exactly as it appears in the original resume. Do not round, recalculate, inflate, or invent metrics.
 5. **Keep every hyperlink intact.** Wherever `Resume_Original.md` has a markdown link (email, LinkedIn, GitHub, project/repo URLs), the tailored resume must carry that same markdown link syntax, not plain text. Never strip a link down to bare text, and never invent a link that is not in the original.
-6. Use the company's job description to decide what to emphasize, not as evidence that the candidate possesses a skill or experience.
+6. Use the company's job description to decide what to emphasize. It is never evidence that the candidate has a skill or experience. Only the user's approval is.
 7. Generate only the document types the user requests. A resume-only request must not produce a cover letter; a cover-letter-only request must not produce a resume. Create an interest answer only if explicitly requested.
 8. Reuse the existing `md2pdf.py` script for PDF generation. Do not write a new conversion script or modify the existing one.
 9. Do not modify the original resume, strategy file, conversion script, or unrelated files.
 10. Report the output paths, meaningful changes, missing qualifications, and PDF verification status. Never claim a file was created or verified if it was not.
-11. **No job-description words the resume doesn't contain.** A term that appears only in the job description must not appear in the tailored resume, not even as one word slipped into an existing bullet (e.g. turning "LangGraph path" into "LangGraph agent path" because the job mentions agents). Before building, check every new word or phrase against `Resume_Original.md`.
+11. **No silent job-description words.** A term that appears only in the job description may enter the tailored resume only as a listed, user-approved `Added from JD:` / `Reworded to fit JD:` item. Never slip one in unannounced (e.g. turning "LangGraph path" into "LangGraph agent path" without listing it). Before building, check every new word or phrase against `Resume_Original.md` and list every one that isn't there.
 12. **End every deliverable reply with the folder name**, as the last line, e.g. `Folder: Resume_Acme/`.
 13. **Open created files in VS Code only in the WellFound session.** When `wellFound_session.md` applies, open each deliverable in the user's current VS Code window with `code -r <path>` after it is created and verified (macOS, if `code` is not on PATH: `"/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code" -r <path>`). For a cover letter, open the `.txt`. Outside the WellFound session, do not open files.
 
@@ -43,9 +43,10 @@ Temporary Markdown files are build inputs only. Create them outside this workspa
 
 | Allowed | Not allowed |
 |---|---|
-| Add a Summary built only from resume facts | Any skill, tool, title, employer, number or claim not in the original |
-| Reorder bullets, skills and skill groups to match the job | Job-description terms inserted into bullets or the Summary |
-| Say the same fact in different words, using the resume's own terms | Rewording that changes or inflates the meaning |
+| Add a Summary built from resume facts and approved JD skills | Any title, employer, project, number or achievement not in the original |
+| Reorder bullets, skills and skill groups to match the job | JD terms added without listing them for approval |
+| Add or reword JD skills through the approval loop | Keeping a JD addition the user rejected |
+| Rephrase bullets Bob-style: skill + plain-English business impact | Rewording that changes or inflates the meaning, or invents an impact |
 | Merge duplicate bullets, shorten or drop the least relevant ones to fit one page | Changing, rounding or recalculating numbers |
 | Keep every existing hyperlink as a markdown link | Flattening a hyperlink to plain text, or inventing a new one |
 
@@ -84,13 +85,17 @@ The folder should contain only the deliverables the user requested.
 ### Steps
 
 1. Read `Resume_Original.md` in full.
-2. Read the job information and identify the role's priorities, required skills, responsibilities, and relevant keywords.
-3. Choose the company folder name, then check whether `Resume_<Company>/` already exists. Reuse it if it does.
-4. Create the tailored resume Markdown in a temporary directory outside the workspace, for example `/tmp/Resume_<Company>.md`. Never save the tailored `.md` file in the workspace.
-5. Tailor only existing content:
-   - **Summary:** Lead with the most relevant facts already in the original resume.
-   - **Experience:** Reorder and reword existing bullets so the most relevant evidence appears first.
-   - **Technical Skills:** Reorder only skills already listed in the original resume.
+2. Read the job information and identify the role's priorities, required skills, responsibilities, and relevant keywords (the "hamburgers").
+3. **JD gap check.** Compare every required skill or keyword with `Resume_Original.md` and sort it:
+   - **Present:** already on the resume. Surface it near the top.
+   - **Sub-topic:** fits inside something already on the resume (e.g. JD "Pandas" under resume "Python data processing"). Plan a reword of that existing item.
+   - **Missing:** not on the resume at all. Plan where it fits most relevantly.
+   - **Not proposable:** degrees, years of experience, languages, certifications, clearances, employers. Report as `Not in your resume: ...`, never added.
+4. Choose the company folder name, then check whether `Resume_<Company>/` already exists. Reuse it if it does.
+5. Create the tailored resume Markdown in a temporary directory outside the workspace, for example `/tmp/Resume_<Company>.md`. Never save the tailored `.md` file in the workspace. Apply **Bob-Style Rephrasing** (below) to every bullet:
+   - **Summary:** Lead with the job's must-have keywords that the resume (or an approved addition) supports.
+   - **Experience:** Reorder and rephrase bullets so the most relevant evidence appears first. Add "Missing" skills into the bullet they fit, and reword "Sub-topic" items to use the JD's term.
+   - **Technical Skills:** Put the job's required skills in the first group. Add "Missing" skills to the group they belong to.
    - **Education and Additional:** Preserve the original facts; do not invent or infer details.
 6. Preserve the original resume's header and formatting unless the user asks for a change. Keep names, places and contact details spelled exactly as the original has them, even if they look like typos, and keep every hyperlink as a markdown link.
 7. Convert the temporary Markdown file using the existing script:
@@ -104,7 +109,22 @@ The folder should contain only the deliverables the user requested.
 8. Ensure the PDF is saved at `Resume_<Company>/Resume_<Company>.pdf`.
 9. Verify that the PDF exists, is readable, and is exactly one A4 page. If it is too long, trim the least relevant existing wording and rebuild; do not remove or alter facts in a misleading way.
    - Gotcha: a 2-page PDF whose second page is blank means page 1 is over-full by a line or so. Trim a short trailing line (a bullet or Summary line ending in one or two words) and rebuild.
-10. Report the saved path, the main tailoring changes, any `Not in your resume: ...` gaps, and whether PDF verification succeeded.
+10. **JD-Gap Approval Loop.**
+    - **Any "Missing" or "Sub-topic" changes made:** open the PDF for the user and list every change, one per line, as `Added from JD: <term> → <where>` or `Reworded to fit JD: <old> → <new>`. Ask the user to approve, reject or edit each one. **Stop and wait for the reply.** Then remove rejected items, apply edits, rebuild, re-verify one page, and finalize.
+    - **No gaps and nothing out of line with the resume:** skip approval. Rephrase Bob-style and finalize directly.
+11. Report the saved path, the main tailoring changes, approved JD additions, any `Not in your resume: ...` gaps, and whether PDF verification succeeded.
+
+### Bob-Style Rephrasing
+
+"Bob" is the future boss or recruiter reading the resume: not technical, scanning fast. Bob hires for **hamburgers** (the exact skills the job asks for) and needs to see **why each one mattered to the business**.
+
+- **Every bullet = hamburger + business impact.** Name the skill or tool the job asks for, then say in plain English what it achieved: time saved, cost cut, risk reduced, users served, decisions enabled. Keep the original numbers exactly.
+- **Impact comes from the resume, never invented.** If the original states no result, describe the plain purpose, not a made-up metric.
+- **No tool chains without an outcome.** Bad: "Engineered a resumable Python ingestion pipeline using arXiv API, Requests and BeautifulSoup with JSON checkpoints into SQLite." Better: "Built a Python and SQL pipeline that pulls research papers automatically, removing hours of manual collection."
+- **Cut jargon** a non-technical reader can't follow. Keep the keyword itself and drop the internal detail around it.
+- **Must-have keywords high up:** Summary, the first bullets of the most relevant role, the first skill group.
+- **Communication:** show "explaining technical work to non-technical people" only when the resume supports it.
+- **Relocation:** if the user says they are relocating, add under the header: `Moving to <place> by <date>, can move earlier if needed`, using only the place and date the user gives.
 
 ### Resume Format
 
@@ -160,9 +180,6 @@ Do not create a tailored resume if the user requested only a cover letter.
 `CoverLetter_<Company>.txt`:
 
 ```text
-COVER LETTER
-Role: <Exact Job Title> - <Company>
-
 Dear <Company> Hiring Team,
 
 <paragraph 1: human hook>
@@ -187,7 +204,7 @@ Only create this answer when the user explicitly asks for it.
 
 - Read `Human_Style_Cover_Letter_Strategy.md` in full before writing, same as for a cover letter. The interest answer is governed by that file's "Short Interest in the Company Answer" section, not written ad hoc.
 - Save it as `Resume_<Company>/Interest_<Company>.txt`.
-- Write exactly **4 sentences**, in this order:
+- Write **4–5 sentences**, in this order:
   1. A specific, human, non-technical observation or company signal — the same kind of quiet, observational hook used to open a cover letter. Do not start with a restated job-description line or a credentials/technical lead-in.
   2. Why it resonates with the candidate — genuine, not a skills statement.
   3. What the candidate can contribute, based only on `Resume_Original.md`.
@@ -202,9 +219,11 @@ Only create this answer when the user explicitly asks for it.
 
 Before reporting completion, confirm:
 
-- [ ] `Resume_Original.md` was read in full and used as the only source of candidate facts.
+- [ ] `Resume_Original.md` was read in full, used as the source of candidate facts, and not modified.
 - [ ] The cover-letter strategy was read in full if a cover letter was requested.
-- [ ] No unsupported skills, tools, employers, projects, qualifications, achievements, numbers, dates, or stories were added.
+- [ ] No unsupported employers, projects, qualifications, achievements, numbers, dates, or stories were added. Every JD-only skill or word was listed and approved by the user; rejected ones were removed.
+- [ ] Every bullet is Bob-style: required skill + plain-English business impact, keywords near the top.
+- [ ] If JD additions were made, the PDF was opened and the user's approval was received before finalizing.
 - [ ] Every hyperlink present in `Resume_Original.md` is still a markdown link in the tailored resume, not plain text.
 - [ ] Missing requirements are listed as `Not in your resume: ...`.
 - [ ] Only the requested document types were generated.
