@@ -26,7 +26,7 @@ Temporary Markdown files are build inputs only. Create them outside this workspa
 ## Ground Rules
 
 1. **Candidate facts come from `Resume_Original.md`, plus job-description skills the user approves.** Never add an employer, project, qualification, achievement, number, date, or personal story the original resume does not support. The one exception is skills and keywords from the job description: these may be added to a tailored resume **only through the JD-Gap Approval Loop** (Task 1), and they stay only if the user approves them. An approval covers that one tailored resume. It never changes `Resume_Original.md`.
-2. **Gaps go through the approval loop.** A job requirement the resume does not show is proposed to the user as `Added from JD: ...` or `Reworded to fit JD: ...`. Anything the user rejects, and anything not proposed (degrees, years of experience, languages, certifications, clearances), is reported with the exact label `Not in your resume: ...`. A skill the candidate is learning appears as a `Currently learning: ...` line only when `Resume_Original.md` contains that line or the user approves one.
+2. **Gaps go through the approval loop.** A job requirement the resume does not show is proposed to the user as `Added from JD: ...` or `Reworded to fit JD: ...`. This includes **nearby skills**: a JD skill that is even loosely close to one on the resume (e.g. JD "Azure" next to resume "AWS") is proposed, never skipped. Anything the user rejects, and anything not proposed (degrees, years of experience, languages, certifications, clearances), is reported with the exact label `Not in your resume: ...`. A skill the candidate is learning appears as a `Currently learning: ...` line only when `Resume_Original.md` contains that line or the user approves one.
 3. You may reword, reorder, emphasize, or remove existing content to match the role. Do not change the meaning of the candidate's experience.
 4. Keep every number exactly as it appears in the original resume. Do not round, recalculate, inflate, or invent metrics.
 5. **Keep every hyperlink intact.** Wherever `Resume_Original.md` has a markdown link (email, LinkedIn, GitHub, project/repo URLs), the tailored resume must carry that same markdown link syntax, not plain text. Never strip a link down to bare text, and never invent a link that is not in the original.
@@ -89,13 +89,14 @@ The folder should contain only the deliverables the user requested.
 3. **JD gap check.** Compare every required skill or keyword with `Resume_Original.md` and sort it:
    - **Present:** already on the resume. Surface it near the top.
    - **Sub-topic:** fits inside something already on the resume (e.g. JD "Pandas" under resume "Python data processing"). Plan a reword of that existing item.
-   - **Missing:** not on the resume at all. Plan where it fits most relevantly.
+   - **Nearby:** not on the resume, but even loosely close to a skill that is. Examples: JD "Azure", "Azure OpenAI" or "Azure AI Services" next to resume "AWS" / "AWS Bedrock"; "LangSmith" next to "Langfuse"; "Flask" next to "FastAPI"; "GraphRAG" next to "RAG"; "Microsoft Copilot Studio" next to "LangGraph agents" / "AgentCore". Always propose these. Mark loose matches as *(weaker match)* so the user can reject them.
+   - **Missing:** not on the resume at all and not near anything on it. Plan where it fits most relevantly.
    - **Not proposable:** degrees, years of experience, languages, certifications, clearances, employers. Report as `Not in your resume: ...`, never added.
 4. Choose the company folder name, then check whether `Resume_<Company>/` already exists. Reuse it if it does.
 5. Create the tailored resume Markdown in a temporary directory outside the workspace, for example `/tmp/Resume_<Company>.md`. Never save the tailored `.md` file in the workspace. Apply **Bob-Style Rephrasing** (below) to every bullet:
    - **Summary:** Lead with the job's must-have keywords that the resume (or an approved addition) supports.
    - **Experience:** Reorder and rephrase bullets so the most relevant evidence appears first. Add "Missing" skills into the bullet they fit, and reword "Sub-topic" items to use the JD's term.
-   - **Technical Skills:** Put the job's required skills in the first group. Add "Missing" skills to the group they belong to.
+   - **Technical Skills:** Put the job's required skills in the first group. Add "Missing" and "Nearby" skills to the group they belong to, or to a new group when several belong together (e.g. `Microsoft & Azure:`). "Nearby" skills go only in Technical Skills, never into Summary or experience bullets, because bullets describe work the candidate actually did.
    - **Education and Additional:** Preserve the original facts; do not invent or infer details.
 6. Preserve the original resume's header and formatting unless the user asks for a change. Keep names, places and contact details spelled exactly as the original has them, even if they look like typos, and keep every hyperlink as a markdown link.
 7. Convert the temporary Markdown file using the existing script:
@@ -110,9 +111,25 @@ The folder should contain only the deliverables the user requested.
 9. Verify that the PDF exists, is readable, and is exactly one A4 page. If it is too long, trim the least relevant existing wording and rebuild; do not remove or alter facts in a misleading way.
    - Gotcha: a 2-page PDF whose second page is blank means page 1 is over-full by a line or so. Trim a short trailing line (a bullet or Summary line ending in one or two words) and rebuild.
 10. **JD-Gap Approval Loop.**
-    - **Any "Missing" or "Sub-topic" changes made:** open the PDF for the user and list every change, one per line, as `Added from JD: <term> → <where>` or `Reworded to fit JD: <old> → <new>`. Ask the user to approve, reject or edit each one. **Stop and wait for the reply.** Then remove rejected items, apply edits, rebuild, re-verify one page, and finalize.
-    - **No gaps and nothing out of line with the resume:** skip approval. Rephrase Bob-style and finalize directly.
-11. Report the saved path, the main tailoring changes, approved JD additions, any `Not in your resume: ...` gaps, and whether PDF verification succeeded.
+    - **Any "Sub-topic", "Nearby" or "Missing" changes made:** open the PDF for the user and show every change under the heading **Adding to your resume (approve or reject)**, as a table (format below). Ask the user to approve, reject or edit each row. **Stop and wait for the reply.** Then remove rejected items, apply edits, rebuild, re-verify one page, and finalize.
+    - **No gaps and nothing out of line with the resume:** skip approval. Rephrase Bob-style and finalize directly. The reply still shows the heading, followed by "Nothing. Every word comes from your original resume."
+11. Report the saved path, the main tailoring changes, the **Adding to your resume** table, any `Not in your resume: ...` gaps, and whether PDF verification succeeded.
+
+### Adding-to-Your-Resume Table
+
+Every tailored-resume reply includes this section, placed before `Not in your resume`. One row per word or skill that is not in `Resume_Original.md`, numbered across rebuilds (already-approved rows are noted as approved, not asked again):
+
+```text
+| # | Added or changed | Section line (exact wording, new part in bold) | Your original had | Close to |
+|---|---|---|---|---|
+| 1 | Flask | Backend: "Python (FastAPI, **Flask**, Pydantic)" | "Python (FastAPI)" | FastAPI |
+| 2 | Azure OpenAI | Microsoft & Azure: "**Azure OpenAI**, Azure AI Services" | not there | OpenAI, AWS Bedrock |
+```
+
+- **Your original had:** the original wording, or "not there".
+- **Close to:** the resume skill the addition maps to; add *(weaker match)* for loose ones; "—" for a reworded sub-topic.
+- Below the table, say whether the Summary or experience bullets gained anything new, and list anything trimmed to fit one page.
+- If the user asks what was added, answer with this table.
 
 ### Bob-Style Rephrasing
 
@@ -223,6 +240,8 @@ Before reporting completion, confirm:
 - [ ] The cover-letter strategy was read in full if a cover letter was requested.
 - [ ] No unsupported employers, projects, qualifications, achievements, numbers, dates, or stories were added. Every JD-only skill or word was listed and approved by the user; rejected ones were removed.
 - [ ] Every bullet is Bob-style: required skill + plain-English business impact, keywords near the top.
+- [ ] Nearby skills (even loose matches, e.g. Azure for AWS) were proposed, only in Technical Skills.
+- [ ] The reply shows the **Adding to your resume** table (or "Nothing...") before `Not in your resume`.
 - [ ] If JD additions were made, the PDF was opened and the user's approval was received before finalizing.
 - [ ] Every hyperlink present in `Resume_Original.md` is still a markdown link in the tailored resume, not plain text.
 - [ ] Missing requirements are listed as `Not in your resume: ...`.
